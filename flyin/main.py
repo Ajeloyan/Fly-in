@@ -10,7 +10,9 @@ def main():
 
     filepath = sys.argv[1]
     try:
-        MapParser().parse(filepath)
+        graph, drones = MapParser().parse(filepath)
+        print(graph)
+        print(drones)
     except ParseError as e:
         print(f"Error: {e}")
         sys.exit(1)

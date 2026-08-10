@@ -11,6 +11,9 @@ class Zone:
     def movement_cost(self) -> int:
         return 1
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.name}, {self.x}, {self.y})"
+
 
 class RestrictedZone(Zone):
     def movement_cost(self) -> int:

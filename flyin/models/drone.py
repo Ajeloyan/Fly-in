@@ -18,4 +18,7 @@ class Drone:
         self.current_zone: Zone | None = current_zone
         self.current_connection: Connection | None = current_connection
         self.status = status
-        self.id = drone_id
+        self.drone_id = drone_id
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.current_zone}, {self.current_connection}, {self.status}, {self.drone_id})"

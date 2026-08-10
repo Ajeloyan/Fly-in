@@ -16,3 +16,6 @@ class Graph:
     def add_connection(self, connection: Connection) -> None:
         self.adjacency[connection.zone_a.name].append(connection)
         self.adjacency[connection.zone_b.name].append(connection)
+
+    def __repr__(self) -> str:
+        return f"{self.zones}, {self.start}, {self.end}"

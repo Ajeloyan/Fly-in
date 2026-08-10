@@ -1,6 +1,6 @@
 .PHONY: install run debug clean lint lint-strict
 
-MAP ?= maps/easy/01_linear_path.txt
+MAP ?= maps/hard/01_maze_nightmare.txt
 
 install:
 	uv sync
