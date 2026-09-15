@@ -74,6 +74,10 @@ class MapParser:
                     if zone_b_obj is None:
                         raise ParseError(f"line {line_number}: connection references unknown zone '{zone_b}'")
 
+                    for c in graph.adjacency[zone_a_obj.name]:
+                        if (c.zone_a == zone_a_obj and c.zone_b == zone_b_obj) or (c.zone_a == zone_b_obj and c.zone_b == zone_a_obj):
+                            raise ParseError(f"line {line_number}: identical connection detected 2 times '{c}'")
+
                     max_link_capacity_str = metadata.get("max_link_capacity", "1")
                     try:
                         max_link_capacity = int(max_link_capacity_str)
