@@ -39,6 +39,8 @@ class MapParser:
                     except ValueError:
                         raise ParseError(f"line {line_number}: invalid max_drones value '{max_drones_str}'")
                     zone_type = metadata.get("zone", "normal")
+                    is_unlimited = prefix in ("start_hub", "end_hub")
+
                     if zone_type == "normal":
                         zone = Zone(name, x, y, max_drones)
                     elif zone_type == "restricted":
@@ -49,7 +51,7 @@ class MapParser:
                         zone = PriorityZone(name, x, y, max_drones)
                     else:
                         raise ParseError(f"line {line_number}: unknown zone type '{zone_type}'")
-                        
+                    zone.unlimited_capacity = is_unlimited
                     graph.add_zone(zone)
 
                     if prefix == "start_hub":

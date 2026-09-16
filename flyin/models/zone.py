@@ -5,13 +5,15 @@ from .errors import ZoneFullError, AbsentDroneError
 if TYPE_CHECKING:
     from .drone import Drone
 
+
 class Zone:
-    def __init__(self, name: str, x: int, y: int, max_drones: int = 1) -> None:
+    def __init__(self, name: str, x: int, y: int, max_drones: int = 1, unlimited_capacity: bool = False) -> None:
         self.name = name
         self.x = x
         self.y = y
         self.max_drones = max_drones
         self.current_drones: list[Drone] = []
+        self.unlimited_capacity: bool = unlimited_capacity
 
     def is_accessible(self) -> bool:
         return True
@@ -20,6 +22,8 @@ class Zone:
         return 1
 
     def has_capacity(self) -> bool:
+        if self.unlimited_capacity is True:
+            return True
         return len(self.current_drones) < self.max_drones
 
     def add_drone(self, drone: Drone) -> None:
