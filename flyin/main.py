@@ -1,5 +1,6 @@
 from .parser import MapParser
 from .models.errors import ParseError
+from .simulation import Simulation
 import sys
 
 
@@ -11,11 +12,13 @@ def main():
     filepath = sys.argv[1]
     try:
         graph, drones = MapParser().parse(filepath)
-        print(graph)
-        print(drones)
+        path = [graph.start, graph.zones["waypoint1"], graph.zones["waypoint2"], graph.end]
+        sim = Simulation(drones, path)
+        sim.launch()
     except ParseError as e:
         print(f"Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

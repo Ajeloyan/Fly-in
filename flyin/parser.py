@@ -37,7 +37,8 @@ class MapParser:
                     try:
                         max_drones = int(max_drones_str)
                     except ValueError:
-                        raise ParseError(f"line {line_number}: invalid max_drones value '{max_drones_str}'")
+                        raise ParseError(f"line {line_number}: invalid max_drones value"
+                                         f" '{max_drones_str}'")
                     zone_type = metadata.get("zone", "normal")
                     is_unlimited = prefix in ("start_hub", "end_hub")
 
@@ -58,33 +59,40 @@ class MapParser:
                         if graph.start is None:
                             graph.start = zone
                         else:
-                            raise ParseError(f"line {line_number}: duplicate start hub value '{graph.start.name}'")
+                            raise ParseError(f"line {line_number}: duplicate start hub"
+                                             f" value '{graph.start.name}'")
                     elif prefix == "end_hub":
                         if graph.end is None:
                             graph.end = zone
                         else:
-                            raise ParseError(f"line {line_number}: duplicate end hub value '{graph.end.name}'")
+                            raise ParseError(f"line {line_number}: duplicate end hub"
+                                             f" value '{graph.end.name}'")
 
                 elif prefix == "connection":
                     zone_a, zone_b, metadata = self.parse_connection_line(rest, line_number)
 
                     zone_a_obj = graph.zones.get(zone_a)
                     if zone_a_obj is None:
-                        raise ParseError(f"line {line_number}: connection references unknown zone '{zone_a}'")
+                        raise ParseError(f"line {line_number}: connection references"
+                                         f" unknown zone '{zone_a}'")
 
                     zone_b_obj = graph.zones.get(zone_b)
                     if zone_b_obj is None:
-                        raise ParseError(f"line {line_number}: connection references unknown zone '{zone_b}'")
+                        raise ParseError(f"line {line_number}: connection references"
+                                         f" unknown zone '{zone_b}'")
 
                     for c in graph.adjacency[zone_a_obj.name]:
-                        if (c.zone_a == zone_a_obj and c.zone_b == zone_b_obj) or (c.zone_a == zone_b_obj and c.zone_b == zone_a_obj):
-                            raise ParseError(f"line {line_number}: identical connection detected 2 times '{c}'")
+                        if (c.zone_a == zone_a_obj and c.zone_b == zone_b_obj) or\
+                              (c.zone_a == zone_b_obj and c.zone_b == zone_a_obj):
+                            raise ParseError(f"line {line_number}: identical connection"
+                                             f" detected 2 times '{c}'")
 
                     max_link_capacity_str = metadata.get("max_link_capacity", "1")
                     try:
                         max_link_capacity = int(max_link_capacity_str)
                     except ValueError:
-                        raise ParseError(f"line {line_number}: invalid max_link_capacity '{max_link_capacity_str}'")
+                        raise ParseError(f"line {line_number}: invalid max_link_capacity"
+                                         f" '{max_link_capacity_str}'")
 
                     connection = Connection(zone_a_obj, zone_b_obj, max_link_capacity)
                     graph.add_connection(connection)
@@ -134,6 +142,7 @@ class MapParser:
         list_drones: list[Drone] = []
         for i in range(nb_drones):
             drone = Drone(start_zone, None, Status.IDLE, i + 1)
+            start_zone.add_drone(drone)
             list_drones.append(drone)
         return list_drones
         
