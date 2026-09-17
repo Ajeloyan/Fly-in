@@ -13,7 +13,7 @@ def main():
     try:
         graph, drones = MapParser().parse(filepath)
         path = [graph.start, graph.zones["waypoint1"], graph.zones["waypoint2"], graph.end]
-        sim = Simulation(drones, path)
+        sim = Simulation(drones, path, graph)
         sim.launch()
     except ParseError as e:
         print(f"Error: {e}")

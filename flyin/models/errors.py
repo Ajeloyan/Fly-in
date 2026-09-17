@@ -16,3 +16,7 @@ class ConnectionFullError(FlyInError):
 
 class AbsentDroneError(FlyInError):
     pass
+
+
+class AbsentConnectionError(FlyInError):
+    pass

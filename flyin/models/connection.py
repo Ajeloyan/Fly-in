@@ -28,5 +28,8 @@ class Connection:
             self.current_drones.remove(drone)
             drone.current_connection = None
 
+    def has_capacity(self) -> bool:
+        return len(self.current_drones) < self.max_link_capacity
+
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.zone_a}, {self.zone_b})"
