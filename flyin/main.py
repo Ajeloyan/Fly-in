@@ -2,6 +2,7 @@ from .parser import MapParser
 from .models.errors import ParseError
 from .simulation import Simulation
 import sys
+from .pathfinding import Pathfinder
 
 
 def main():
@@ -12,7 +13,8 @@ def main():
     filepath = sys.argv[1]
     try:
         graph, drones = MapParser().parse(filepath)
-        path = [graph.start, graph.zones["waypoint1"], graph.zones["waypoint2"], graph.end]
+        pathfinder = Pathfinder()
+        path = pathfinder.find_path(graph)
         sim = Simulation(drones, path, graph)
         sim.launch()
     except ParseError as e:
