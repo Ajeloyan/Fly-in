@@ -21,4 +21,5 @@ class Drone:
         self.drone_id = drone_id
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.current_zone}, {self.current_connection}, {self.status}, {self.drone_id})"
+        return f"{self.__class__.__name__}({self.current_zone}, {self.current_connection}, \
+            {self.status}, {self.drone_id})"

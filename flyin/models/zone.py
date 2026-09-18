@@ -7,7 +7,8 @@ if TYPE_CHECKING:
 
 
 class Zone:
-    def __init__(self, name: str, x: int, y: int, max_drones: int = 1, unlimited_capacity: bool = False) -> None:
+    def __init__(self, name: str, x: int, y: int,
+                 max_drones: int = 1, unlimited_capacity: bool = False) -> None:
         self.name = name
         self.x = x
         self.y = y

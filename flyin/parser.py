@@ -145,4 +145,3 @@ class MapParser:
             start_zone.add_drone(drone)
             list_drones.append(drone)
         return list_drones
-        

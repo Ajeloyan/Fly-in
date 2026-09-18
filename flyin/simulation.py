@@ -13,7 +13,7 @@ class Simulation:
         self.progress = {drone: 1 for drone in self.drones}
         self.graph = graph
 
-    def launch(self):
+    def launch(self) -> None:
         while not all(self.progress[drone] >= len(self.path) for drone in self.drones):
             turn = []
             for drone in self.drones:
@@ -27,7 +27,7 @@ class Simulation:
                     turn.append(f"D{drone.drone_id}-{zone.name}")
                     self.progress[drone] += 1
                     continue
-
+                assert drone.current_zone is not None
                 if zone.has_capacity():
                     if isinstance(zone, RestrictedZone):
                         connection_name = f"{drone.current_zone.name}-{zone.name}"
@@ -45,6 +45,7 @@ class Simulation:
 
     def get_connection(self, zone_a: Zone, zone_b: Zone) -> Connection:
         for c in self.graph.adjacency[zone_a.name]:
-            if (c.zone_a == zone_b and c.zone_b == zone_a) or (c.zone_b == zone_b and c.zone_a == zone_a):
+            if (c.zone_a == zone_b and c.zone_b == zone_a) or \
+                 (c.zone_b == zone_b and c.zone_a == zone_a):
                 return c
         raise AbsentConnectionError(f"There is no connection between {zone_a} and {zone_b}")

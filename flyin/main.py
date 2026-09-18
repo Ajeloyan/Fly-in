@@ -5,7 +5,7 @@ import sys
 from .pathfinding import Pathfinder
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print("Usage: python -m flyin.main <map_file>")
         sys.exit(1)
