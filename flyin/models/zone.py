@@ -8,13 +8,15 @@ if TYPE_CHECKING:
 
 class Zone:
     def __init__(self, name: str, x: int, y: int,
-                 max_drones: int = 1, unlimited_capacity: bool = False) -> None:
+                 max_drones: int = 1, unlimited_capacity: bool = False,
+                 color: str | None = None) -> None:
         self.name = name
         self.x = x
         self.y = y
         self.max_drones = max_drones
         self.current_drones: list[Drone] = []
         self.unlimited_capacity: bool = unlimited_capacity
+        self.color = color
 
     def is_accessible(self) -> bool:
         return True

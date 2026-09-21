@@ -1,6 +1,6 @@
 .PHONY: install run debug clean lint lint-strict
 
-MAP ?= maps/hard/01_maze_nightmare.txt
+MAP ?=
 
 install:
 	uv sync

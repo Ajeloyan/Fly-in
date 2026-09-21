@@ -13,7 +13,8 @@ class Simulation:
         self.progress = {drone: 1 for drone in self.drones}
         self.graph = graph
 
-    def launch(self) -> None:
+    def launch(self) -> list[list[str]]:
+        history: list[list[str]] = []
         while not all(self.progress[drone] >= len(self.path) for drone in self.drones):
             turn = []
             for drone in self.drones:
@@ -41,7 +42,8 @@ class Simulation:
                         drone.current_zone.remove_drone(drone)
                         zone.add_drone(drone)
                         self.progress[drone] += 1
-            print(" ".join(turn))
+            history.append(turn)
+        return history
 
     def get_connection(self, zone_a: Zone, zone_b: Zone) -> Connection:
         for c in self.graph.adjacency[zone_a.name]:

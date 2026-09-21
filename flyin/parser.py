@@ -31,6 +31,9 @@ class MapParser:
                                          f" got {nb_drones}")
                 elif prefix in ("hub", "start_hub", "end_hub"):
                     name, x, y, metadata = self.parse_zone_line(rest, line_number)
+                    color = metadata.get("color")
+                    if not color:
+                        return None
                     if name in graph.zones:
                         raise ParseError(f"line {line_number}: duplicate zone name '{name}'")
                     max_drones_str = metadata.get("max_drones", "1")
@@ -43,13 +46,13 @@ class MapParser:
                     is_unlimited = prefix in ("start_hub", "end_hub")
 
                     if zone_type == "normal":
-                        zone = Zone(name, x, y, max_drones)
+                        zone = Zone(name, x, y, max_drones, color=color)
                     elif zone_type == "restricted":
-                        zone = RestrictedZone(name, x, y, max_drones)
+                        zone = RestrictedZone(name, x, y, max_drones, color=color)
                     elif zone_type == "blocked":
-                        zone = BlockedZone(name, x, y, max_drones)
+                        zone = BlockedZone(name, x, y, max_drones, color=color)
                     elif zone_type == "priority":
-                        zone = PriorityZone(name, x, y, max_drones)
+                        zone = PriorityZone(name, x, y, max_drones, color=color)
                     else:
                         raise ParseError(f"line {line_number}: unknown zone type '{zone_type}'")
                     zone.unlimited_capacity = is_unlimited
