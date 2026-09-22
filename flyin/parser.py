@@ -32,8 +32,6 @@ class MapParser:
                 elif prefix in ("hub", "start_hub", "end_hub"):
                     name, x, y, metadata = self.parse_zone_line(rest, line_number)
                     color = metadata.get("color")
-                    if not color:
-                        return None
                     if name in graph.zones:
                         raise ParseError(f"line {line_number}: duplicate zone name '{name}'")
                     max_drones_str = metadata.get("max_drones", "1")

@@ -1,8 +1,8 @@
 import arcade
 from pathlib import Path
 from ..parser import MapParser
-from ..pathfinding import Pathfinder
 from ..simulation import Simulation
+from ..pathfinding import Pathfinder
 from .simulation_view import SimulationView
 
 
@@ -12,7 +12,7 @@ class MenuView(arcade.View):
         self.maps = sorted(Path("maps").rglob("*.txt"))
 
     def on_show_view(self) -> None:
-        self.window.background_color = arcade.color.DARK_SLATE_GRAY
+        self.window.background_color = arcade.color.BANANA_MANIA
 
     def on_draw(self) -> None:
         self.clear()
