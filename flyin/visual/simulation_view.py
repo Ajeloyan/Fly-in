@@ -49,8 +49,10 @@ class SimulationView(arcade.View):
         for zone in self.graph.zones.values():
             x, y = self._to_screen(zone)
             arcade.draw_circle_filled(x, y, 30, self._zone_color(zone))
-        for pos in self.drone_positions.values():
+        for drone_id, pos in self.drone_positions.items():
             arcade.draw_circle_filled(pos[0], pos[1], 16, arcade.color.MAGENTA)
+            arcade.draw_text(str(drone_id), pos[0], pos[1], arcade.color.WHITE, 12,
+                             anchor_x="center", anchor_y="center")
         arcade.draw_text(
          f"Turn: {min(self.current_turn, len(self.history))}",
          10, self.window.height - 30, arcade.color.BLACK, 16)

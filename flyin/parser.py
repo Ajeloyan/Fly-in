@@ -22,6 +22,8 @@ class MapParser:
                 rest = rest.strip()
 
                 if prefix == "nb_drones":
+                    if nb_drones is not None:
+                        raise ParseError(f"line {line_number}: duplicate nb_drones declaration")
                     try:
                         nb_drones = int(rest)
                     except ValueError:

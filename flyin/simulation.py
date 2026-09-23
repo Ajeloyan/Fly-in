@@ -6,22 +6,26 @@ from .models.errors import AbsentConnectionError
 
 
 class Simulation:
-    def __init__(self, drones: list[Drone], path: list[Zone], graph: Graph) -> None:
+    def __init__(self, drones: list[Drone], paths: list[list[Zone]], graph: Graph) -> None:
         self.drones = drones
-        self.path = path
+        self.path = paths
         self.all_finished = False
         self.progress = {drone: 1 for drone in self.drones}
         self.graph = graph
+        self.drone_paths: dict[Drone, list[Zone]] = {}
+        for i, drone in enumerate(drones):
+            self.drone_paths[drone] = paths[i % len(paths)]
 
     def launch(self) -> list[list[str]]:
         history: list[list[str]] = []
-        while not all(self.progress[drone] >= len(self.path) for drone in self.drones):
+        while not all(self.progress[drone] >= len(self.drone_paths[drone])
+                      for drone in self.drones):
             turn = []
             for drone in self.drones:
-                if self.progress[drone] >= len(self.path):
+                if self.progress[drone] >= len(self.drone_paths[drone]):
                     continue
                 idx = self.progress[drone]
-                zone = self.path[idx]
+                zone = self.drone_paths[drone][idx]
                 if drone.current_connection is not None:
                     drone.current_connection.remove_drone(drone)
                     zone.add_drone(drone)
@@ -33,11 +37,13 @@ class Simulation:
                     if isinstance(zone, RestrictedZone):
                         connection_name = f"{drone.current_zone.name}-{zone.name}"
                         connection = self.get_connection(drone.current_zone, zone)
-                        if connection.has_capacity():
+                        occupied_or_incoming = len(zone.current_drones) + \
+                            len(connection.current_drones)
+                        if occupied_or_incoming < zone.max_drones and connection.has_capacity():
                             drone.current_zone.remove_drone(drone)
                             connection.add_drone(drone)
                             turn.append(f"D{drone.drone_id}-{connection_name}")
-                    else:
+                    elif zone.has_capacity():
                         turn.append(f"D{drone.drone_id}-{zone.name}")
                         drone.current_zone.remove_drone(drone)
                         zone.add_drone(drone)

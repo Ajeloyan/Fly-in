@@ -15,8 +15,8 @@ def main() -> None:
         try:
             graph, drones = MapParser().parse(filepath)
             pathfinder = Pathfinder()
-            path = pathfinder.find_path(graph)
-            sim = Simulation(drones, path, graph)
+            paths = pathfinder.yen(graph, graph.start, graph.end, 4)
+            sim = Simulation(drones, paths, graph)
             history = sim.launch()
             for turn in history:
                 print(" ".join(turn))

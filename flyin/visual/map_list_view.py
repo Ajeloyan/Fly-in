@@ -4,6 +4,7 @@ from .. parser import MapParser
 from ..pathfinding import Pathfinder
 from .. simulation import Simulation
 from .simulation_view import SimulationView
+from ..models.errors import FlyInError
 
 
 class MapListView(arcade.View):
@@ -11,6 +12,7 @@ class MapListView(arcade.View):
         super().__init__()
         self.category = category
         self.maps = sorted(Path(f"maps/{category}").glob("*.txt"))
+        self.error_message: str | None = None
 
     def on_show_view(self) -> None:
         self.window.background_color = arcade.color.DARK_SLATE_GRAY
@@ -40,6 +42,9 @@ class MapListView(arcade.View):
             arcade.draw_lrbt_rectangle_filled(left, right, bottom, top, arcade.color.BLUE_GRAY)
             arcade.draw_text(map_path.stem, (left + right) / 2, (bottom + top) / 2,
                              arcade.color.WHITE, 16, anchor_x="center", anchor_y="center")
+        if self.error_message is not None:
+            arcade.draw_text(self.error_message, self.window.width / 2, 30,
+                             arcade.color.RED, 16, anchor_x="center", anchor_y="center")
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int) -> None:
         left, right, bottom, top = self._back_box()
@@ -50,9 +55,13 @@ class MapListView(arcade.View):
         for i, map_path in enumerate(self.maps):
             left, right, bottom, top = self._button_box(i)
             if left <= x <= right and bottom <= y <= top:
-                graph, drones = MapParser().parse(str(map_path))
-                path = Pathfinder().find_path(graph)
-                history = Simulation(drones, path, graph).launch()
+                try:
+                    graph, drones = MapParser().parse(str(map_path))
+                    paths = Pathfinder().yen(graph, graph.start, graph.end, 4)
+                    history = Simulation(drones, paths, graph).launch()
+                except FlyInError as e:
+                    self.error_message = str(e)
+                    return
                 for turn in history:
                     print(" ".join(turn))
                 self.window.show_view(SimulationView(graph, history))
