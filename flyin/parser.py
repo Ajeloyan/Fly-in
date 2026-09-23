@@ -40,6 +40,8 @@ class MapParser:
                     except ValueError:
                         raise ParseError(f"line {line_number}: invalid max_drones value"
                                          f" '{max_drones_str}'")
+                    if max_drones <= 0:
+                        raise ParseError(f"line {line_number}: max_drones must be positive")
                     zone_type = metadata.get("zone", "normal")
                     is_unlimited = prefix in ("start_hub", "end_hub")
 
@@ -94,7 +96,8 @@ class MapParser:
                     except ValueError:
                         raise ParseError(f"line {line_number}: invalid max_link_capacity"
                                          f" '{max_link_capacity_str}'")
-
+                    if max_link_capacity <= 0:
+                        raise ParseError(f"line {line_number}: max_link_capacity must be positive")
                     connection = Connection(zone_a_obj, zone_b_obj, max_link_capacity)
                     graph.add_connection(connection)
                 else:
@@ -130,7 +133,8 @@ class MapParser:
             y = int(y_str)
         except ValueError:
             raise ParseError(f"line {line_number}: invalid zone line '{rest}'")
-
+        if "-" in name:
+            raise ParseError(f"line {line_number}: zone name '{name}' cannot contain a dash")
         return name, x, y, metadata
 
     def parse_connection_line(self, rest: str, line_number: int) -> tuple[str, str, dict[str, str]]:
