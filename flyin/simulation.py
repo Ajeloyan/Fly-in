@@ -21,6 +21,7 @@ class Simulation:
         while not all(self.progress[drone] >= len(self.drone_paths[drone])
                       for drone in self.drones):
             turn = []
+            connections_used_this_turn: dict[Connection, int] = {}
             for drone in self.drones:
                 if self.progress[drone] >= len(self.drone_paths[drone]):
                     continue
@@ -44,10 +45,14 @@ class Simulation:
                             connection.add_drone(drone)
                             turn.append(f"D{drone.drone_id}-{connection_name}")
                     elif zone.has_capacity():
-                        turn.append(f"D{drone.drone_id}-{zone.name}")
-                        drone.current_zone.remove_drone(drone)
-                        zone.add_drone(drone)
-                        self.progress[drone] += 1
+                        connection = self.get_connection(drone.current_zone, zone)
+                        used = connections_used_this_turn.get(connection, 0)
+                        if used < connection.max_link_capacity:
+                            connections_used_this_turn[connection] = used + 1
+                            turn.append(f"D{drone.drone_id}-{zone.name}")
+                            drone.current_zone.remove_drone(drone)
+                            zone.add_drone(drone)
+                            self.progress[drone] += 1
             history.append(turn)
         return history
 
