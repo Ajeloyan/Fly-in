@@ -1,9 +1,4 @@
 import arcade
-from pathlib import Path
-from ..parser import MapParser
-from ..simulation import Simulation
-from ..pathfinding import Pathfinder
-from .simulation_view import SimulationView
 
 CATEGORIES = ["easy", "medium", "hard", "challenger"]
 
@@ -21,7 +16,8 @@ class MenuView(arcade.View):
 
     def on_draw(self) -> None:
         self.clear()
-        arcade.draw_text("FLY-IN", self.window.width / 2, self.window.height - 200, arcade.color.BRONZE, 48, anchor_x="center", font_name="Kenney Blocks")
+        arcade.draw_text("FLY-IN", self.window.width / 2, self.window.height - 200,
+                         arcade.color.BRONZE, 48, anchor_x="center", font_name="Kenney Blocks")
         for i, category in enumerate(CATEGORIES):
             left, right, bottom, top = self._button_box(i)
             arcade.draw_lrbt_rectangle_filled(left, right, bottom, top, arcade.color.BLUE_GRAY)
