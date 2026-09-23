@@ -111,7 +111,7 @@ class MapParser:
         list_drones: list[Drone] = self.build_drones(graph.start, nb_drones)
         return graph, list_drones
 
-    def extract_metadata(self, text: str) -> tuple[str, dict[str, str]]:
+    def extract_metadata(self, text: str, line_number: int) -> tuple[str, dict[str, str]]:
         if "[" in text:
             before, after = text.split("[", 1)
             after = after.rstrip("]")
@@ -121,12 +121,15 @@ class MapParser:
 
         metadata: dict[str, str] = {}
         for pair in after.split():
-            key, value = pair.split("=", 1)
+            try:
+                key, value = pair.split("=", 1)
+            except ValueError:
+                raise ParseError(f"line {line_number}: invalid metadata '{pair}'")
             metadata[key] = value
         return before, metadata
 
     def parse_zone_line(self, rest: str, line_number: int) -> tuple[str, int, int, dict[str, str]]:
-        before, metadata = self.extract_metadata(rest)
+        before, metadata = self.extract_metadata(rest, line_number)
         try:
             name, x_str, y_str = before.split()
             x = int(x_str)
@@ -138,7 +141,7 @@ class MapParser:
         return name, x, y, metadata
 
     def parse_connection_line(self, rest: str, line_number: int) -> tuple[str, str, dict[str, str]]:
-        before, metadata = self.extract_metadata(rest)
+        before, metadata = self.extract_metadata(rest, line_number)
         try:
             zone_a, zone_b = before.split("-")
             zone_a = zone_a.strip()
