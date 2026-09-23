@@ -124,9 +124,13 @@ class MapParser:
 
     def parse_zone_line(self, rest: str, line_number: int) -> tuple[str, int, int, dict[str, str]]:
         before, metadata = self.extract_metadata(rest)
-        name, x_str, y_str = before.split()
-        x = int(x_str)
-        y = int(y_str)
+        try:
+            name, x_str, y_str = before.split()
+            x = int(x_str)
+            y = int(y_str)
+        except ValueError:
+            raise ParseError(f"line {line_number}: invalid zone line '{rest}'")
+
         return name, x, y, metadata
 
     def parse_connection_line(self, rest: str, line_number: int) -> tuple[str, str, dict[str, str]]:
