@@ -8,6 +8,7 @@ from ..models.errors import FlyInError
 
 
 class MapListView(arcade.View):
+    """Lists the maps of one category and launches a simulation on click."""
     def __init__(self, category: str) -> None:
         super().__init__()
         self.category = category

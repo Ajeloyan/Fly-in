@@ -4,6 +4,7 @@ CATEGORIES = ["easy", "medium", "hard", "challenger"]
 
 
 class MenuView(arcade.View):
+    """The landing screen: lets the user pick a map difficulty category."""
     def on_show_view(self) -> None:
         self.window.background_color = arcade.color.DARK_SLATE_GRAY
 

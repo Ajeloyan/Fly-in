@@ -10,6 +10,7 @@ from .visual.menu_view import MenuView
 
 
 def main() -> None:
+    """Entry point: run a map from the CLI argument if given, then launch the GUI."""
     if len(sys.argv) >= 2:
         filepath = sys.argv[1]
         try:

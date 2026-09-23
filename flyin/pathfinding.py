@@ -6,6 +6,7 @@ from .models.connection import Connection
 
 
 class Pathfinder:
+    """Computes shortest paths, and sets of alternative paths, over a Graph."""
     def __init__(self) -> None:
         pass
 
@@ -14,6 +15,8 @@ class Pathfinder:
                  target: Zone,
                  excluded_connections: set[Connection] | None = None,
                  excluded_zones: set[Zone] | None = None) -> list[Zone]:
+        """Return the cheapest path from `source` to `target`, ignoring any excluded
+        connections/zones. Raises UnreachableEndError if `target` cannot be reached."""
         assert target is not None
         distances: dict[Zone, float] = {zone: (0 if zone == source else
                                                inf) for zone in graph.zones.values()}
@@ -45,6 +48,8 @@ class Pathfinder:
         return path
 
     def yen(self, graph: Graph, source: Zone, target: Zone, k: int) -> list[list[Zone]]:
+        """Return up to `k` distinct shortest paths from `source` to `target`,
+        sorted by increasing cost, using Yen's algorithm on top of `dijkstra`."""
         A = [self.dijkstra(graph, source, target)]
         B: list[list[Zone]] = []
 
@@ -82,12 +87,15 @@ class Pathfinder:
 
     def get_connection(self, graph: Graph, zone_a: Zone, zone_b: Zone) -> Connection:
         for c in graph.adjacency[zone_a.name]:
+            """Return the connection linking `zone_a` and `zone_b`, raising AbsentConnectionError
+        if none exists."""
             if (c.zone_a == zone_a and c.zone_b == zone_b) or \
-                 (c.zone_a == zone_b and c.zone_b == zone_a):
+               (c.zone_a == zone_b and c.zone_b == zone_a):
                 return c
         raise AbsentConnectionError(f"Connection {c} doesn't exists")
 
     def _path_cost(self, path: list[Zone]) -> int:
+        """Return the total movement cost of walking through every zone in `path`."""
         count = 0
         for zone in path:
             if isinstance(zone, RestrictedZone):
@@ -96,6 +104,7 @@ class Pathfinder:
         return count
 
     def find_path(self, graph: Graph) -> list[Zone]:
+        """Return the single shortest path from the graph's start hub to its end hub."""
         assert graph.end is not None
         assert graph.start is not None
         return self.dijkstra(graph, graph.start, graph.end)

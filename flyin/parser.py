@@ -7,8 +7,9 @@ from pathlib import Path
 
 
 class MapParser:
-
+    """Parses a map text file into a Graph and the list of Drones starting on it."""
     def parse(self, filepath: str) -> tuple[Graph, list[Drone]]:
+        """Read and validate the map file at `filepath`, returning the graph and drones."""
         graph = Graph()
         path = Path(filepath)
         nb_drones: int | None = None
@@ -114,6 +115,7 @@ class MapParser:
         return graph, list_drones
 
     def extract_metadata(self, text: str, line_number: int) -> tuple[str, dict[str, str]]:
+        """Split `text` into its part before `[...]` and the parsed key=value metadata."""
         if "[" in text:
             before, after = text.split("[", 1)
             after = after.rstrip("]")
@@ -131,6 +133,7 @@ class MapParser:
         return before, metadata
 
     def parse_zone_line(self, rest: str, line_number: int) -> tuple[str, int, int, dict[str, str]]:
+        """Parse a hub/start_hub/end_hub line into (name, x, y, metadata)."""
         before, metadata = self.extract_metadata(rest, line_number)
         try:
             name, x_str, y_str = before.split()
@@ -143,6 +146,7 @@ class MapParser:
         return name, x, y, metadata
 
     def parse_connection_line(self, rest: str, line_number: int) -> tuple[str, str, dict[str, str]]:
+        """Parse a connection line into (zone_a_name, zone_b_name, metadata)."""
         before, metadata = self.extract_metadata(rest, line_number)
         try:
             zone_a, zone_b = before.split("-")
@@ -153,6 +157,7 @@ class MapParser:
         return zone_a, zone_b, metadata
 
     def build_drones(self, start_zone: Zone, nb_drones: int) -> list[Drone]:
+        """Create `nb_drones` idle Drone instances, all placed in `start_zone`."""
         list_drones: list[Drone] = []
         for i in range(nb_drones):
             drone = Drone(start_zone, None, Status.IDLE, i + 1)

@@ -6,6 +6,7 @@ from .models.errors import AbsentConnectionError
 
 
 class Simulation:
+    """Runs the turn-by-turn drone simulation over one or more precomputed paths."""
     def __init__(self, drones: list[Drone], paths: list[list[Zone]], graph: Graph) -> None:
         self.drones = drones
         self.path = paths
@@ -17,6 +18,8 @@ class Simulation:
             self.drone_paths[drone] = paths[i % len(paths)]
 
     def launch(self) -> list[list[str]]:
+        """Run the simulation to completion, returning the per-turn move history
+        (each turn as a list of "D<id>-<zone>" / "D<id>-<connection>" strings)."""
         history: list[list[str]] = []
         while not all(self.progress[drone] >= len(self.drone_paths[drone])
                       for drone in self.drones):
@@ -57,6 +60,7 @@ class Simulation:
         return history
 
     def get_connection(self, zone_a: Zone, zone_b: Zone) -> Connection:
+        """Return the connection linking `zone_a` and `zone_b` in this simulation's graph."""
         for c in self.graph.adjacency[zone_a.name]:
             if (c.zone_a == zone_b and c.zone_b == zone_a) or \
                  (c.zone_b == zone_b and c.zone_a == zone_a):

@@ -5,6 +5,7 @@ from arcade.types import Color
 
 
 class SimulationView(arcade.View):
+    """Replays a computed simulation history, animating drones between zones."""
     def __init__(self, graph: Graph, history: list[list[str]]) -> None:
         super().__init__()
         self.graph = graph

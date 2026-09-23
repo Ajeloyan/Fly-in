@@ -1,26 +1,26 @@
 class FlyInError(Exception):
-    pass
+    """Base class for all domain errors raised by this project."""
 
 
 class ParseError(FlyInError):
-    pass
+    """Raised when a map file is malformed or violates the format's constraints."""
 
 
 class ZoneFullError(FlyInError):
-    pass
+    """Raised when a drone tries to enter a zone that has no remaining capacity."""
 
 
 class ConnectionFullError(FlyInError):
-    pass
+    """Raised when a drone tries to enter a connection that has no remaining capacity."""
 
 
 class AbsentDroneError(FlyInError):
-    pass
+    """Raised when trying to remove a drone from a zone/connection it isn't in."""
 
 
 class AbsentConnectionError(FlyInError):
-    pass
+    """Raised when no connection exists between two zones that were expected to be linked."""
 
 
 class UnreachableEndError(FlyInError):
-    pass
+    """Raised when the end hub cannot be reached from the start hub."""

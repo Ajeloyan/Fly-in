@@ -4,12 +4,14 @@ from enum import Enum
 
 
 class Status(Enum):
+    """Lifecycle state of a drone during the simulation."""
     IDLE = "idle"
     TRANSIT = "in_transit"
     DELIVERED = "delivered"
 
 
 class Drone:
+    """A single drone: its current position (zone or connection) and status."""
     def __init__(self,
                  current_zone: Zone | None,
                  current_connection: Connection | None,
