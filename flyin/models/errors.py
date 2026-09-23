@@ -20,3 +20,7 @@ class AbsentDroneError(FlyInError):
 
 class AbsentConnectionError(FlyInError):
     pass
+
+
+class UnreachableEndError(FlyInError):
+    pass

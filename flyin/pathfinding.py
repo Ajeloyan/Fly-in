@@ -1,6 +1,7 @@
 from .models.graph import Graph
 from .models.zone import Zone
 from math import inf
+from .models.errors import UnreachableEndError
 
 
 class Pathfinder:
@@ -24,6 +25,8 @@ class Pathfinder:
                 if cost < distances[neighbor]:
                     distances[neighbor] = cost
                     came_from[neighbor] = current
+        if distances[graph.end] == inf:
+            raise UnreachableEndError("End hub is Unreachable, map is incorrect")
         current = graph.end
         path = [current]
         while current != graph.start:
