@@ -15,6 +15,8 @@ def main() -> None:
         try:
             graph, drones = MapParser().parse(filepath)
             pathfinder = Pathfinder()
+            assert graph.end is not None
+            assert graph.start is not None
             paths = pathfinder.yen(graph, graph.start, graph.end, 4)
             sim = Simulation(drones, paths, graph)
             history = sim.launch()

@@ -57,6 +57,8 @@ class MapListView(arcade.View):
             if left <= x <= right and bottom <= y <= top:
                 try:
                     graph, drones = MapParser().parse(str(map_path))
+                    assert graph.end is not None
+                    assert graph.start is not None
                     paths = Pathfinder().yen(graph, graph.start, graph.end, 4)
                     history = Simulation(drones, paths, graph).launch()
                 except FlyInError as e:
