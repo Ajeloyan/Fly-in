@@ -29,7 +29,6 @@ def main() -> None:
         window = Window()
         window.show_view(MenuView())
     arcade.run()
-    print(type(arcade.color.BLACK))
 
 
 if __name__ == "__main__":
